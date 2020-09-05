@@ -1,6 +1,39 @@
 """ Importing pygame """
 import pygame
 
+class Cell():
+    def __init__(self, value, color, row, col):
+        self._value = value
+        self._color = color
+        self.row = row
+        self.col = col
+        self.font = pygame.font.SysFont('Arial', 20)
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, color):
+        self._color = color
+
+    def draw_number(self, win, width, rows):
+        gap = width // rows
+        x = self.row * gap
+        y = self.col * gap
+
+        text = self.font.render(str(self.value), 1, self.color)
+        text.blit(win, (x + text.get_width() / 2, y + text.get_height()))
+
+
 # Global parameters
 WIDTH = 500
 ROWS = 9
@@ -9,6 +42,8 @@ ROWS = 9
 WHITE = (249, 249, 249)
 BLACK = (39, 39, 39)
 GRAY = (145, 145, 145)
+RED = (234, 35, 36)
+GREEN = (80, 197, 85)
 
 # Screen
 win = pygame.display.set_mode((WIDTH, WIDTH))
@@ -61,9 +96,11 @@ def is_valid(grid, num, position):
 
     return True
 
-def solve(grid):
+def solve(grid, width, rows, draw=None, is_drawn=None):
     """ Solves an empty sudoku board """
     find = find_empty(grid)
+
+    draw()
 
     if not find: # If it doesn't find an empty cell
         return True
@@ -100,7 +137,7 @@ def draw(win, width, rows):
 def main():
     """ Main function """
     run = True
-    
+
     # Main loop
     while run:
         for event in pygame.event.get():

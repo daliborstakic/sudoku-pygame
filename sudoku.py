@@ -14,6 +14,17 @@ GRAY = (145, 145, 145)
 win = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Sudoku")
 
+def gen_empty_grid(rows):
+    """ Method generates an empty matrix """
+
+    grid = []
+    for i in range(rows):
+        grid.append([])
+        for j in range(rows):
+            grid[i].append(None)
+    
+    return grid
+
 def draw_grid(win, width, rows):
     gap = width // rows
 

@@ -25,6 +25,18 @@ def gen_empty_grid(rows):
     
     return grid
 
+def initialize_grid(grid):
+    """ Firstly, we will fill a whole grid than
+        Then we will remove a random amount of number from the grid
+        Ensuring that the grid is solveable """
+
+def find_empty(grid):
+    """ Finds an unfilled cell """
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            if not grid[i][j]:
+                return i, j
+
 def draw_grid(win, width, rows):
     gap = width // rows
 

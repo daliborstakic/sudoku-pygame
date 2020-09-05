@@ -15,13 +15,12 @@ win = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Sudoku")
 
 def gen_empty_grid(rows):
-    """ Method generates an empty matrix """
-
+    """ Generates a grid filled with zeros """
     grid = []
     for i in range(rows):
         grid.append([])
         for j in range(rows):
-            grid[i].append(None)
+            grid[i].append(0)
     
     return grid
 
@@ -34,7 +33,7 @@ def find_empty(grid):
     """ Finds an unfilled cell """
     for i in range(len(grid)):
         for j in range(len(grid[0])):
-            if not grid[i][j]:
+            if grid[i][j] == 0:
                 return i, j
 
 def is_valid(grid, num, position):
@@ -52,12 +51,12 @@ def is_valid(grid, num, position):
             return False
 
     # Checking the 3X3 boxes
-    box_x = row // 3
-    box_y = col // 3
+    box_x = col // 3
+    box_y = row // 3
 
     for i in range(box_y * 3, box_y * 3 + 3):
         for j in range(box_x * 3, box_x * 3 + 3):
-            if grid[i][j] == num and i != row and j != col:
+            if grid[i][j] == num and (i, j) != position:
                 return False
 
     return True
@@ -75,10 +74,10 @@ def solve(grid):
         if is_valid(grid, i, (row, col)):
             grid[row][col] = i # Sets value
 
-        if solve(grid): # Recursive call
-            return True
+            if solve(grid): # Recursive call
+                return True
 
-        grid[row][col] = None
+            grid[row][col] = 0
 
 def draw_grid(win, width, rows):
     gap = width // rows
@@ -101,7 +100,7 @@ def draw(win, width, rows):
 def main():
     """ Main function """
     run = True
-
+    
     # Main loop
     while run:
         for event in pygame.event.get():

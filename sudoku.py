@@ -62,6 +62,24 @@ def is_valid(grid, num, position):
 
     return True
 
+def solve(grid):
+    """ Solves an empty sudoku board """
+    find = find_empty(grid)
+
+    if not find: # If it doesn't find an empty cell
+        return True
+    else:
+        row, col = find # Current row and col
+
+    for i in range(1, 10):
+        if is_valid(grid, i, (row, col)):
+            grid[row][col] = i # Sets value
+
+        if solve(grid): # Recursive call
+            return True
+
+        grid[row][col] = None
+
 def draw_grid(win, width, rows):
     gap = width // rows
 

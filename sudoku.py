@@ -37,6 +37,31 @@ def find_empty(grid):
             if not grid[i][j]:
                 return i, j
 
+def is_valid(grid, num, position):
+    """ Checks if a number is valid at the given position """
+    row, col = position
+
+    # Checking the horizontal rows
+    for i in range(len(grid[0])):
+        if grid[row][i] == num and col != i:
+            return False
+
+    # Checking the vertical columns
+    for i in range(len(grid)):
+        if grid[i][col] == num and row != i:
+            return False
+
+    # Checking the 3X3 boxes
+    box_x = row // 3
+    box_y = col // 3
+
+    for i in range(box_y * 3, box_y * 3 + 3):
+        for j in range(box_x * 3, box_x * 3 + 3):
+            if grid[i][j] == num and i != row and j != col:
+                return False
+
+    return True
+
 def draw_grid(win, width, rows):
     gap = width // rows
 

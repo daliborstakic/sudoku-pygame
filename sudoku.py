@@ -1,5 +1,5 @@
 """ Importing pygame """
-from turtle import width
+from random import randint
 import pygame
 
 pygame.init()
@@ -58,10 +58,25 @@ def gen_empty_grid(rows):
     
     return grid
 
-def initialize_grid(grid):
+def initialize_grid(rows):
     """ Firstly, we will fill a whole grid than
         Then we will remove a random amount of number from the grid
         Ensuring that the grid is solveable """
+
+    empty_grid = gen_empty_grid(rows)
+    solve(draw, False, empty_grid)
+
+    attempt = 50
+
+    while attempt > 0:
+        row = randint(0, 8)
+        col = randint(0, 8)
+
+        if empty_grid[row][col].number != 0:
+            empty_grid[row][col].number = 0
+            attempt -= 1
+
+    return empty_grid
 
 def find_empty(grid):
     """ Finds an unfilled cell """
@@ -98,6 +113,7 @@ def is_valid(grid, num, position):
 def solve(draw, is_drawn, grid):
     """ Solves an empty sudoku board """
     find = find_empty(grid)
+    grid[0][0].number = randint(1, 9)
 
     """ Just so it doesn't visualize always """
     if is_drawn:
@@ -157,8 +173,7 @@ def main():
     """ Main function """
     run = True
 
-    grid = gen_empty_grid(ROWS)
-    solve(lambda: draw(win, grid, WIDTH, ROWS), False, grid)
+    grid = initialize_grid(ROWS)
 
     # Main loop
     while run:

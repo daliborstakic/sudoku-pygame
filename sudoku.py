@@ -1,4 +1,5 @@
 """ Importing pygame """
+from ast import NodeTransformer
 from random import randint
 import pygame
 
@@ -47,6 +48,20 @@ pygame.display.set_caption("Sudoku")
 # FPS Clock
 clock = pygame.time.Clock()
 FPS = 10
+
+def switcher(argument):
+    switcher = {
+        pygame.K_1: 1,
+        pygame.K_2: 2,
+        pygame.K_3: 3,
+        pygame.K_4: 4,
+        pygame.K_5: 5,
+        pygame.K_6: 6,
+        pygame.K_7: 7,
+        pygame.K_8: 8,
+        pygame.K_9: 9
+    }
+    return switcher.get(argument)
 
 def gen_empty_grid(rows):
     """ Generates a grid filled with zeros """
@@ -185,7 +200,12 @@ def main():
     """ Main function """
     run = True
 
+    # The board
     grid = initialize_grid(ROWS)
+
+    # Selected cell
+    sel_row = None
+    sel_col = None
 
     # Main loop
     while run:
@@ -194,9 +214,19 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+            if pygame.mouse.get_pressed()[0]:
+                pos = pygame.mouse.get_pos()
+                sel_row, sel_col = get_clicked_pos(WIDTH, ROWS, pos)
+
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                key = event.key
+
+                if key == pygame.K_SPACE:
                     solve(lambda: draw(win, grid, WIDTH, ROWS), True, grid)
+
+                if sel_row != None and sel_col != None and grid[sel_row][sel_col].number == 0:
+                    grid[sel_row][sel_col].number = switcher(key)
 
         draw(win, grid, WIDTH, ROWS)
 

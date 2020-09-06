@@ -44,6 +44,10 @@ NUMBER_FONT = pygame.font.SysFont('Arial', 50)
 win = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Sudoku")
 
+# FPS Clock
+clock = pygame.time.Clock()
+FPS = 10
+
 def gen_empty_grid(rows):
     """ Generates a grid filled with zeros """
     grid = []
@@ -91,9 +95,14 @@ def is_valid(grid, num, position):
 
     return True
 
-def solve(grid):
+def solve(draw, is_drawn, grid):
     """ Solves an empty sudoku board """
     find = find_empty(grid)
+
+    """ Just so it doesn't visualize always """
+    if is_drawn:
+        draw()
+        clock.tick(FPS)
 
     if not find: # If it doesn't find an empty cell
         return True
@@ -103,11 +112,13 @@ def solve(grid):
     for i in range(1, 10):
         if is_valid(grid, i, (row, col)):
             grid[row][col].number = i # Sets number
+            grid[row][col].color = GREEN if is_drawn else BLACK
 
-            if solve(grid): # Recursive call
+            if solve(draw, is_drawn, grid): # Recursive call
                 return True
 
             grid[row][col].number = 0
+            grid[row][col].color = RED if is_drawn else BLACK
 
 def draw_grid(win, width, rows):
     """ Draws the grid lines """
@@ -138,7 +149,7 @@ def draw(win, grid, width, rows):
             y = j * gap
 
             if grid[i][j].number != 0:
-                win.blit(text, (x + 10, y - 3))
+                win.blit(text, (x + 12, y - 3))
 
     pygame.display.update()
 
@@ -147,10 +158,12 @@ def main():
     run = True
 
     grid = gen_empty_grid(ROWS)
-    solve(grid)
+    solve(lambda: draw(win, grid, WIDTH, ROWS), False, grid)
 
     # Main loop
     while run:
+        clock.tick(FPS)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False

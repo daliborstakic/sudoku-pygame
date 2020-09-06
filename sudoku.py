@@ -78,6 +78,16 @@ def initialize_grid(rows):
 
     return empty_grid
 
+def get_clicked_pos(width, rows, pos):
+    """ Returns row and column based on click position """
+    x, y = pos
+    gap = width // rows
+
+    row = x // gap
+    col = y // gap
+
+    return row, col
+
 def find_empty(grid):
     """ Finds an unfilled cell """
     for i in range(len(grid)):

@@ -1,6 +1,7 @@
 """ Importing pygame """
 from ast import NodeTransformer
 from random import randint
+from turtle import width
 import pygame
 
 pygame.init()
@@ -37,6 +38,7 @@ BLACK = (39, 39, 39)
 GRAY = (145, 145, 145)
 RED = (234, 35, 36)
 GREEN = (80, 197, 85)
+BLUE = (0, 170, 251)
 
 # Number font
 NUMBER_FONT = pygame.font.SysFont('Arial', 50)
@@ -139,13 +141,17 @@ def solve(draw, is_drawn, grid):
     """ Solves an empty sudoku board """
     find = find_empty(grid)
 
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+
     if is_drawn == False:
         grid[0][0].number = randint(1, 9)
 
     """ Just so it doesn't visualize always """
     if is_drawn:
         draw()
-        clock.tick(FPS)
+        clock.tick(20)
 
     if not find: # If it doesn't find an empty cell
         return True
@@ -227,6 +233,10 @@ def main():
 
                 if sel_row != None and sel_col != None and grid[sel_row][sel_col].number == 0:
                     grid[sel_row][sel_col].number = switcher(key)
+
+                if key == pygame.K_DELETE:
+                    if not is_valid(grid, grid[sel_row][sel_col].number, (sel_row, sel_col)):
+                        grid[sel_row][sel_col].number = 0
 
         draw(win, grid, WIDTH, ROWS)
 

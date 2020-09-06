@@ -113,7 +113,9 @@ def is_valid(grid, num, position):
 def solve(draw, is_drawn, grid):
     """ Solves an empty sudoku board """
     find = find_empty(grid)
-    grid[0][0].number = randint(1, 9)
+
+    if is_drawn == False:
+        grid[0][0].number = randint(1, 9)
 
     """ Just so it doesn't visualize always """
     if is_drawn:
@@ -182,6 +184,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    solve(lambda: draw(win, grid, WIDTH, ROWS), True, grid)
 
         draw(win, grid, WIDTH, ROWS)
 

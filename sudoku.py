@@ -1,7 +1,5 @@
 """ Importing pygame """
-from ast import NodeTransformer
 from random import randint
-from turtle import width
 import pygame
 
 pygame.init()
@@ -65,22 +63,22 @@ def switcher(argument):
     }
     return switcher.get(argument)
 
-def gen_empty_grid(rows):
+def gen_empty_grid():
     """ Generates a grid filled with zeros """
     grid = []
-    for i in range(rows):
+    for i in range(ROWS):
         grid.append([])
-        for j in range(rows):
+        for j in range(ROWS):
             grid[i].append(Cell(0, BLACK, i, j))
     
     return grid
 
-def initialize_grid(rows):
+def initialize_grid():
     """ Firstly, we will fill a whole grid than
         Then we will remove a random amount of number from the grid
         Ensuring that the grid is solveable """
 
-    empty_grid = gen_empty_grid(rows)
+    empty_grid = gen_empty_grid()
     solve(draw, False, empty_grid)
 
     attempt = 50
@@ -95,10 +93,10 @@ def initialize_grid(rows):
 
     return empty_grid
 
-def get_clicked_pos(width, rows, pos):
+def get_clicked_pos(pos):
     """ Returns row and column based on click position """
     x, y = pos
-    gap = width // rows
+    gap = WIDTH // ROWS
 
     row = x // gap
     col = y // gap
@@ -116,7 +114,7 @@ def is_valid(grid, num, position):
     """ Checks if a number is valid at the given position """
     row, col = position
 
-    # Checking the horizontal rows
+    # Checking the horizontal ROWS
     for i in range(len(grid[0])):
         if grid[row][i].number == num and col != i:
             return False
@@ -169,25 +167,25 @@ def solve(draw, is_drawn, grid):
             grid[row][col].number = 0
             grid[row][col].color = RED if is_drawn else BLACK
 
-def draw_grid(win, width, rows):
+def draw_grid(win):
     """ Draws the grid lines """
-    gap = width // rows
+    gap = WIDTH // ROWS
 
-    for i in range(rows):
+    for i in range(ROWS):
         x = i * gap
         x_color = BLACK if i % 3 == 0 else GRAY
-        pygame.draw.line(win, x_color, (x, 0), (x, width))
-        for j in range(rows):
+        pygame.draw.line(win, x_color, (x, 0), (x, WIDTH))
+        for j in range(ROWS):
             y = j * gap
             y_color = BLACK if j % 3 == 0 else GRAY
-            pygame.draw.line(win, y_color, (0, y), (width, y))
+            pygame.draw.line(win, y_color, (0, y), (WIDTH, y))
 
-def draw(win, grid, width, rows):
+def draw(win, grid):
     """ Drawing and rendering the screen """
     win.fill(WHITE)
-    draw_grid(win, width, rows)
+    draw_grid(win)
     
-    gap = width // rows
+    gap = WIDTH // ROWS
 
     """ Drawing the numbers """
     for i in range(len(grid)):
@@ -207,7 +205,7 @@ def main():
     run = True
 
     # The board
-    grid = initialize_grid(ROWS)
+    grid = initialize_grid()
 
     # Selected cell
     sel_row = None
@@ -223,13 +221,13 @@ def main():
 
             if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
-                sel_row, sel_col = get_clicked_pos(WIDTH, ROWS, pos)
+                sel_row, sel_col = get_clicked_pos(pos)
 
             if event.type == pygame.KEYDOWN:
                 key = event.key
 
                 if key == pygame.K_SPACE:
-                    solve(lambda: draw(win, grid, WIDTH, ROWS), True, grid)
+                    solve(lambda: draw(win, grid), True, grid)
 
                 if sel_row != None and sel_col != None and grid[sel_row][sel_col].number == 0:
                     grid[sel_row][sel_col].number = switcher(key)
@@ -238,7 +236,7 @@ def main():
                     if not is_valid(grid, grid[sel_row][sel_col].number, (sel_row, sel_col)):
                         grid[sel_row][sel_col].number = 0
 
-        draw(win, grid, WIDTH, ROWS)
+        draw(win, grid)
 
     pygame.quit()
 

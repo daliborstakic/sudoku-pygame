@@ -29,6 +29,7 @@ class Cell():
 # Global parameters
 WIDTH = 450
 ROWS = 9
+GAP = WIDTH // ROWS
 
 # Colors
 WHITE = (249, 249, 249)
@@ -96,10 +97,9 @@ def initialize_grid():
 def get_clicked_pos(pos):
     """ Returns row and column based on click position """
     x, y = pos
-    gap = WIDTH // ROWS
 
-    row = x // gap
-    col = y // gap
+    row = x // GAP
+    col = y // GAP
 
     return row, col
 
@@ -169,14 +169,12 @@ def solve(draw, is_drawn, grid):
 
 def draw_grid(win):
     """ Draws the grid lines """
-    gap = WIDTH // ROWS
-
     for i in range(ROWS):
-        x = i * gap
+        x = i * GAP
         x_color = BLACK if i % 3 == 0 else GRAY
         pygame.draw.line(win, x_color, (x, 0), (x, WIDTH))
         for j in range(ROWS):
-            y = j * gap
+            y = j * GAP
             y_color = BLACK if j % 3 == 0 else GRAY
             pygame.draw.line(win, y_color, (0, y), (WIDTH, y))
 
@@ -185,15 +183,13 @@ def draw(win, grid):
     win.fill(WHITE)
     draw_grid(win)
     
-    gap = WIDTH // ROWS
-
     """ Drawing the numbers """
     for i in range(len(grid)):
         for j in range(len(grid[0])):
             text = NUMBER_FONT.render(str(grid[i][j].number), 1, grid[i][j].color)
             
-            x = i * gap
-            y = j * gap
+            x = i * GAP
+            y = j * GAP
 
             if grid[i][j].number != 0:
                 win.blit(text, (x + 12, y - 3))
